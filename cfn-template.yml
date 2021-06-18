@@ -200,7 +200,7 @@ Resources:
       KeyName: !Ref KeyName
       LaunchTemplate: 
         LaunchTemplateId: !Ref ManagerLaunchTemplate
-        Version: !!GetAtt ManagerLaunchTemplate.LatestVersionNumber
+        Version: !GetAtt ManagerLaunchTemplate.LatestVersionNumber
       IamInstanceProfile: !Ref EC2toECRProfile
       SecurityGroups: 
         - !Ref DockerMachineSecurityGroup

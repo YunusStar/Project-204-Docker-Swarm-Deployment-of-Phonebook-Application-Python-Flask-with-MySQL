@@ -4,14 +4,15 @@ services:
     database:
         image: mysql:5.7
         configs:
-            - db-config
+         -  source: db-config
+            target: /docker-entrypoint-initdb.d/init.sql
         environment:
             MYSQL_ROOT_PASSWORD: R1234r
             MYSQL_DATABASE: phonebook_db
             MYSQL_USER: admin
             MYSQL_PASSWORD: Clarusway_1
         volumes:
-            - dbdata:/docker-entrypoint-initdb.d
+            - dbdata:/var/lib/mysql
     myapp:
         image: 850044925511.dkr.ecr.us-east-1.amazonaws.com/clarusway-repo/phonebook-app:latest
         restart: always
