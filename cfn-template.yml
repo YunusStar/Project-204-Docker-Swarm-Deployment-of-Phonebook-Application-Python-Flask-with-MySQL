@@ -71,8 +71,7 @@ Resources:
             APP_REPO_NAME: clarusway-repo/phonebook-app
             GITHUB_REPO: https://github.com/YunusStar/Project-204-Docker-Swarm-Deployment-of-Phonebook-Application-Python-Flask-with-MySQL.git
             GIT_FILE_URL: https://raw.githubusercontent.com/YunusStar/Project-204-Docker-Swarm-Deployment-of-Phonebook-Application-Python-Flask-with-MySQL/main/
-        SecurityGroupIds:
-          - !Ref DockerMachineSecurityGroup
+
   WorkerLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
@@ -99,8 +98,7 @@ Resources:
           mkdir -p /home/ec2-user/.docker
           cd /home/ec2-user/.docker
           echo '{"credsStore": "ecr-login"}' > config.json
-        SecurityGroupIds:
-          - !Ref DockerMachineSecurityGroup
+
   ManagerLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
@@ -127,8 +125,7 @@ Resources:
           mkdir -p /home/ec2-user/.docker
           cd /home/ec2-user/.docker
           echo '{"credsStore": "ecr-login"}' > config.json
-        SecurityGroupIds:
-          - !Ref DockerMachineSecurityGroup
+
   EC2FullAccessToECR:
     Type: "AWS::IAM::Role"
     Properties:
@@ -176,10 +173,10 @@ Resources:
       KeyName: !Ref KeyName
       LaunchTemplate: 
         LaunchTemplateId: !Ref GrandMasterLaunchTemplate
-        Version: !!GetAtt GrandMaster.LatestVersionNumber
+        Version: !GetAtt GrandMasterLaunchTemplate.LatestVersionNumber
       IamInstanceProfile: !Ref EC2toECRProfile
-      SecurityGroupIds:
-        - !GetAtt DockerMachineSecurityGroup.GroupId
+      SecurityGroups: 
+        - !Ref  DockerMachineSecurityGroup
       Tags:                
         -                        
           Key: Name
@@ -194,8 +191,8 @@ Resources:
         LaunchTemplateId: !Ref ManagerLaunchTemplate
         Version: !!GetAtt ManagerLaunchTemplate.LatestVersionNumber
       IamInstanceProfile: !Ref EC2toECRProfile
-      SecurityGroupIds:
-        - !GetAtt DockerMachineSecurityGroup.GroupId
+      SecurityGroups: 
+        - !Ref DockerMachineSecurityGroup
       Tags:                
         -                        
           Key: Name
@@ -208,10 +205,10 @@ Resources:
       KeyName: !Ref KeyName
       LaunchTemplate: 
         LaunchTemplateId: !Ref ManagerLaunchTemplate
-        Version: !!GetAtt ManagerLaunchTemplate.LatestVersionNumber
+        Version: !GetAtt ManagerLaunchTemplate.LatestVersionNumber
       IamInstanceProfile: !Ref EC2toECRProfile
-      SecurityGroupIds:
-        - !GetAtt DockerMachineSecurityGroup.GroupId
+      SecurityGroups: 
+        - !Ref DockerMachineSecurityGroup
       Tags:                
         -                        
           Key: Name
@@ -224,7 +221,7 @@ Resources:
       KeyName: !Ref KeyName
       LaunchTemplate: 
         LaunchTemplateId: !Ref WorkerLaunchTemplate
-        Version: !!GetAtt WorkerLaunchTemplate.LatestVersionNumber
+        Version: !GetAtt WorkerLaunchTemplate.LatestVersionNumber
       IamInstanceProfile: !Ref EC2toECRProfile
       SecurityGroupIds:
         - !GetAtt DockerMachineSecurityGroup.GroupId
@@ -240,7 +237,7 @@ Resources:
       KeyName: !Ref KeyName
       LaunchTemplate: 
         LaunchTemplateId: !Ref WorkerLaunchTemplate
-        Version: !!GetAtt WorkerLaunchTemplate.LatestVersionNumber
+        Version: !GetAtt WorkerLaunchTemplate.LatestVersionNumber
       IamInstanceProfile: !Ref EC2toECRProfile
       SecurityGroupIds:
         - !GetAtt DockerMachineSecurityGroup.GroupId
@@ -255,8 +252,10 @@ Outputs:
     Value: !Sub 
       - ${PublicAddress}
       - PublicAddress: !GetAtt GrandMasterDockerMachine.PublicDnsName
-  VizAppWebsiteURL:
-    Description: GrandMAsterDocker Machine DNS Name
-    Value: !Sub 
-      - ${PublicAddress}
-      - PublicAddress: !GetAtt GrandMasterDockerMachine.PublicDnsName:8080
+  # VizAppWebsiteURL:
+  #   Description: GrandMasterDocker Machine DNS Name
+  #   Value: !Join 
+  #     - ''
+  #     - - 'http://'
+  #       - !Ref WebsiteURL
+  #       - ':8080'
