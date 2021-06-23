@@ -57,7 +57,7 @@ Resources:
           EOF
           curl -o "docker-compose.yml" -L https://raw.githubusercontent.com/YunusStar/Project-204-Docker-Swarm-Deployment-of-Phonebook-Application-Python-Flask-with-MySQL/main/docker-compose.yml
           curl -o "phonebook-app.py" -L https://raw.githubusercontent.com/YunusStar/Project-204-Docker-Swarm-Deployment-of-Phonebook-Application-Python-Flask-with-MySQL/main/phonebook-app.py
-          docker-compose config | docker stack deploy --with-registry-auth -c - phonebook && docker run --network phonebook_clarusnet -v /home/ec2-user/phonebook:/app python:alpine sh -c 'pip install mysql-connector-python &&  python /app/init-db.py'
+          docker-compose config | docker stack deploy --with-registry-auth -c - phonebook && docker run --network phonebook_clarusnet -v /home/ec2-user/phonebook:/app python:alpine sh -c 'pip install mysql-connector-python &&  python /app/phonebook-app.py'
           - ECR_REGISTRY: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com
             APP_REPO_NAME: clarusway-repo/phonebook-app
             GITHUB_REPO: https://github.com/YunusStar/Project-204-Docker-Swarm-Deployment-of-Phonebook-Application-Python-Flask-with-MySQL.git
