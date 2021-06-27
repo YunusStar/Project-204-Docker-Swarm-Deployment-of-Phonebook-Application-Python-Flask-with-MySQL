@@ -27,3 +27,7 @@ configs:
         file: ./init.sql
 volumes:
     dbdata:
+        
+configs:
+    initialdatabase:
+        file: ./init.sql
